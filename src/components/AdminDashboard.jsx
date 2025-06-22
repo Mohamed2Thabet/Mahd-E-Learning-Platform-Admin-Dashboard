@@ -225,8 +225,8 @@ function AdminDashboard() {
       active: users.filter(u => u.isActive).length,
       inactive: users.filter(u => !u.isActive).length,
       admins: users.filter(u => u.role?.toLowerCase() === 'admin').length,
-      managers: users.filter(u => u.role?.toLowerCase() === 'manager').length,
-      regularUsers: users.filter(u => u.role?.toLowerCase() === 'user').length
+      eductors: users.filter(u => u.role?.toLowerCase() === 'educator').length,
+      regularUsers: users.filter(u => u.role?.toLowerCase() === 'student').length
     };
   };
 
@@ -272,9 +272,9 @@ function AdminDashboard() {
             style={{ maxWidth: '150px', backgroundColor: 'var(--card-background)', borderColor: 'var(--border-color)', color: 'var(--text-light)' }}
           >
             <option value="">All Roles</option>
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="User">User</option>
+            <option value="Student">Student</option>
+            <option value="Educator">Educator</option>
+      
           </Form.Select>
 
           <Form.Select
@@ -335,8 +335,8 @@ function AdminDashboard() {
         <Col md={2}>
           <StatsCard>
             <Card.Body className="text-center">
-              <h3 className="mb-1">{stats.managers}</h3>
-              <p className="mb-0">Managers</p>
+              <h3 className="mb-1">{stats.eductors}</h3>
+              <p className="mb-0">Educators</p>
             </Card.Body>
           </StatsCard>
         </Col>
@@ -535,7 +535,7 @@ function AdminDashboard() {
               >
                 <option value="">Select Role</option>
                 <option value="User">User</option>
-                <option value="Manager">Manager</option>
+                <option value="Educator">Educator</option>
                 <option value="Admin">Admin</option>
               </Form.Select>
             </Form.Group>
