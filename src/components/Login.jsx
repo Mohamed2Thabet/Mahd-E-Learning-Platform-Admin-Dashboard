@@ -1,8 +1,128 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginAdmin } from '../store/adminSlice'; // تأكد من المسار
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiShield } from 'react-icons/fi';
 import styled from 'styled-components';
-import { login } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+
+function Login({ onLogin }) {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState({ show: false, type: '', message: '' });
+  const navigate =useNavigate()
+  const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const resultAction = await dispatch(loginAdmin(formData));
+      if (loginAdmin.fulfilled.match(resultAction)) {
+        showAlert('success', 'Login successful!');
+        setTimeout(() => onLogin(resultAction.payload), 1000);
+      } else {
+        throw new Error(resultAction.payload || 'Login failed');
+      }
+    } catch (error) {
+      showAlert('error', error.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showAlert = (type, message) => {
+    setAlert({ show: true, type, message });
+    setTimeout(() => setAlert({ show: false, type: '', message: '' }), 4000);
+  };
+
+  const fillDemoCredentials = () => {
+    setFormData({ email: 'admin@example.com', password: 'admin123' });
+  };
+
+  return (
+    <LoginContainer>
+      <Container>
+        <Row className="justify-content-center">
+          <Col>
+            <StyledCard>
+              <LogoSection>
+                <LogoIcon><FiShield /></LogoIcon>
+                <h3 style={{ color: 'var(--heading-color)' }}>Admin Dashboard</h3>
+                <p style={{ color: 'var(--text-secondary)' }}>Sign in to manage your system</p>
+              </LogoSection>
+
+              <Card.Body style={{ padding: '40px' }}>
+                {alert.show && (
+                  <Alert
+                    variant={alert.type === 'error' ? 'danger' : 'success'}
+                    dismissible
+                    onClose={() => setAlert({ show: false, type: '', message: '' })}>
+                    {alert.message}
+                  </Alert>
+                )}
+
+                <DemoCredentials>
+                  <strong>Demo Credentials:</strong><br />
+                  Email: admin@example.com<br />
+                  Password: admin123<br />
+                  <Button variant="link" size="sm" onClick={fillDemoCredentials}>
+                    Click to fill automatically
+                  </Button>
+                </DemoCredentials>
+
+                <Form onSubmit={handleSubmit}>
+                  <InputGroup>
+                    <InputIcon><FiMail /></InputIcon>
+                    <StyledInput
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </InputGroup>
+
+                  <InputGroup>
+                    <InputIcon><FiLock /></InputIcon>
+                    <StyledInput
+                      type={showPassword ? 'text' : 'password'}
+                      name="password"
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      hasToggle
+                      required
+                    />
+                    <PasswordToggle type="button" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <FiEyeOff /> : <FiEye />}
+                    </PasswordToggle>
+                  </InputGroup>
+
+                  <LoginButton type="submit" disabled={loading} onClick={() => navigate('/dashboard')}>
+                    {loading ? (<><Spinner animation="border" size="sm" /> Signing in...</>) : 'Sign In'}
+                  </LoginButton>
+                </Form>
+              </Card.Body>
+            </StyledCard>
+          </Col>
+        </Row>
+      </Container>
+    </LoginContainer>
+  );
+}
+
+export default Login;
+
+
+
 
 const LoginContainer = styled.div`
   min-height: 100vh;
@@ -133,149 +253,3 @@ const DemoCredentials = styled.div`
   font-size: 14px;
   color: var(--primary);
 `;
-
-function Login({ onLogin }) {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({ show: false, type: '', message: '' });
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    try {
-      const response = await login(formData.email, formData.password);
-      showAlert('success', 'Login successful!');
-      setTimeout(() => {
-        onLogin(response);
-      }, 1000);
-    } catch (error) {
-      showAlert('error', error.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const showAlert = (type, message) => {
-    setAlert({ show: true, type, message });
-    setTimeout(() => setAlert({ show: false, type: '', message: '' }), 5000);
-  };
-
-  const fillDemoCredentials = () => {
-    setFormData({
-      email: 'admin@example.com',
-      password: 'admin123'
-    });
-  };
-
-  return (
-    <LoginContainer>
-      <Container>
-        <Row className="justify-content-center">
-          <Col>
-            <StyledCard>
-              <LogoSection>
-                <LogoIcon>
-                  <FiShield />
-                </LogoIcon>
-                <h3 style={{ color: 'var(--heading-color)', marginBottom: '8px' }}>
-                  Admin Dashboard
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
-                  Sign in to manage your system
-                </p>
-              </LogoSection>
-
-              <Card.Body style={{ padding: '40px' }}>
-                {alert.show && (
-                  <Alert 
-                    variant={alert.type === 'error' ? 'danger' : 'success'} 
-                    dismissible 
-                    onClose={() => setAlert({ show: false, type: '', message: '' })}
-                  >
-                    {alert.message}
-                  </Alert>
-                )}
-
-                <DemoCredentials>
-                  <strong>Demo Credentials:</strong><br />
-                  Email: admin@example.com<br />
-                  Password: admin123<br />
-                  <Button 
-                    variant="link" 
-                    size="sm" 
-                    onClick={fillDemoCredentials}
-                    style={{ color: 'var(--primary)', padding: '4px 0', textDecoration: 'none' }}
-                  >
-                    Click to fill automatically
-                  </Button>
-                </DemoCredentials>
-
-                <Form onSubmit={handleSubmit}>
-                  <InputGroup>
-                    <InputIcon>
-                      <FiMail />
-                    </InputIcon>
-                    <StyledInput
-                      type="email"
-                      name="email"
-                      placeholder="Enter your email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </InputGroup>
-
-                  <InputGroup>
-                    <InputIcon>
-                      <FiLock />
-                    </InputIcon>
-                    <StyledInput
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      placeholder="Enter your password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      hasToggle
-                      required
-                    />
-                    <PasswordToggle
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <FiEyeOff /> : <FiEye />}
-                    </PasswordToggle>
-                  </InputGroup>
-
-                  <LoginButton type="submit" disabled={loading}>
-                    {loading ? (
-                      <>
-                        <Spinner animation="border" size="sm" />
-                        Signing in...
-                      </>
-                    ) : (
-                      'Sign In'
-                    )}
-                  </LoginButton>
-                </Form>
-              </Card.Body>
-            </StyledCard>
-          </Col>
-        </Row>
-      </Container>
-    </LoginContainer>
-  );
-}
-
-export default Login;

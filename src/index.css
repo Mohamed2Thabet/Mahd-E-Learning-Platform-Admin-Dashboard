@@ -1,14 +1,184 @@
+/* Base CSS Variables */
 :root {
   --primary: #00E676;
   --primary-dark: #00C853;
-  --background-dark: #101310 !important;
-  --card-background: #181d19;
-  --text-light: rgba(255, 255, 255, 0.87);
-  --text-secondary: rgba(255, 255, 255, 0.6);
-  --border-color: #333;
-  --heading-color: white;
-  --mode-text: white;
-  --error-color: #ff4d4f;
+  --background-dark: #0a0e0b !important;
+  --card-background: #141a15;
+  --text-light: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --border-color: #2a332b;
+  --heading-color: #ffffff;
+  --mode-text: #ffffff;
+  --error-color: #ff4757;
+  --success-color: #2ed573;
+  --warning-color: #ffa502;
+  --info-color: #3742fa;
+  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --box-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark Theme */
+[data-theme='dark'] {
+  --primary: #00E676;
+  --primary-dark: #00C853;
+  --background-dark: #0a0e0b !important;
+  --card-background: #141a15;
+  --text-light: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --border-color: #2a332b;
+  --heading-color: #ffffff !important;
+  --mode-text: #ffffff;
+  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --box-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --primary: #007BFF;
+  --primary-dark: #0056b3;
+  --background-dark: #f8f9fa;
+  --card-background: #ffffff;
+  --text-light: #212529;
+  --text-secondary: rgba(33, 37, 41, 0.7);
+  --border-color: #e9ecef;
+  --heading-color: #212529;
+  --mode-text: #212529;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --box-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Ocean Blue Theme */
+[data-theme='blue'] {
+  --primary: #1e88e5;
+  --primary-dark: #1565c0;
+  --background-dark: #e1f5fe;
+  --card-background: #b3e5fc;
+  --text-light: #01579b;
+  --text-secondary: rgba(1, 87, 155, 0.75);
+  --border-color: #81d4fa;
+  --heading-color: #01579b;
+  --mode-text: #01579b;
+  --box-shadow: 0 4px 20px rgba(30, 136, 229, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(30, 136, 229, 0.25);
+}
+
+/* Warm Sepia Theme */
+[data-theme='sepia'] {
+  --primary: #8d6e63;
+  --primary-dark: #5d4037;
+  --background-dark: #faf4e8;
+  --card-background: #f5e6d3;
+  --text-light: #3e2723;
+  --text-secondary: rgba(62, 39, 35, 0.75);
+  --border-color: #d7ccc8;
+  --heading-color: #3e2723;
+  --mode-text: #3e2723;
+  --box-shadow: 0 4px 20px rgba(141, 110, 99, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(141, 110, 99, 0.25);
+}
+
+/* Royal Purple Theme */
+[data-theme='purple'] {
+  --primary: #ab47bc;
+  --primary-dark: #8e24aa;
+  --background-dark: #f3e5f5;
+  --card-background: #e1bee7;
+  --text-light: #4a148c;
+  --text-secondary: rgba(74, 20, 140, 0.75);
+  --border-color: #ce93d8;
+  --heading-color: #4a148c;
+  --mode-text: #4a148c;
+  --box-shadow: 0 4px 20px rgba(171, 71, 188, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(171, 71, 188, 0.25);
+}
+
+/* Emerald Teal Theme */
+[data-theme='teal'] {
+  --primary: #26a69a;
+  --primary-dark: #00695c;
+  --background-dark: #e0f2f1;
+  --card-background: #b2dfdb;
+  --text-light: #004d40;
+  --text-secondary: rgba(0, 77, 64, 0.75);
+  --border-color: #80cbc4;
+  --heading-color: #004d40;
+  --mode-text: #004d40;
+  --box-shadow: 0 4px 20px rgba(38, 166, 154, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(38, 166, 154, 0.25);
+}
+
+/* Rose Pink Theme */
+[data-theme='pink'] {
+  --primary: #ec407a;
+  --primary-dark: #c2185b;
+  --background-dark: #fce4ec;
+  --card-background: #f8bbd0;
+  --text-light: #880e4f;
+  --text-secondary: rgba(136, 14, 79, 0.75);
+  --border-color: #f48fb1;
+  --heading-color: #880e4f;
+  --mode-text: #880e4f;
+  --box-shadow: 0 4px 20px rgba(236, 64, 122, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(236, 64, 122, 0.25);
+}
+
+/* Sunset Orange Theme */
+[data-theme='orange'] {
+  --primary: #ff7043;
+  --primary-dark: #d84315;
+  --background-dark: #fff3e0;
+  --card-background: #ffe0b2;
+  --text-light: #bf360c;
+  --text-secondary: rgba(191, 54, 12, 0.75);
+  --border-color: #ffcc80;
+  --heading-color: #bf360c;
+  --mode-text: #bf360c;
+  --box-shadow: 0 4px 20px rgba(255, 112, 67, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(255, 112, 67, 0.25);
+}
+
+/* Forest Green Theme */
+[data-theme='green'] {
+  --primary: #66bb6a;
+  --primary-dark: #2e7d32;
+  --background-dark: #e8f5e8;
+  --card-background: #c8e6c9;
+  --text-light: #1b5e20;
+  --text-secondary: rgba(27, 94, 32, 0.75);
+  --border-color: #a5d6a7;
+  --heading-color: #1b5e20;
+  --mode-text: #1b5e20;
+  --box-shadow: 0 4px 20px rgba(102, 187, 106, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(102, 187, 106, 0.25);
+}
+
+/* Slate Gray Theme */
+[data-theme='gray'] {
+  --primary: #78909c;
+  --primary-dark: #455a64;
+  --background-dark: #eceff1;
+  --card-background: #cfd8dc;
+  --text-light: #263238;
+  --text-secondary: rgba(38, 50, 56, 0.75);
+  --border-color: #b0bec5;
+  --heading-color: #263238;
+  --mode-text: #263238;
+  --box-shadow: 0 4px 20px rgba(120, 144, 156, 0.15);
+  --box-shadow-hover: 0 8px 30px rgba(120, 144, 156, 0.25);
+}
+
+/* Global Body Styles */
+body {
+  background: var(--background-dark);
+  color: var(--text-light);
+  transition: all 0.3s ease;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 * {

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { FiUsers, FiUser, FiSettings, FiShield, FiLogOut } from 'react-icons/fi';
-import AdminDashboard from './components/AdminDashboard';
-import UserProfile from './components/UserProfile';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
-import styled from 'styled-components';
+import AdminDashboard from './components/AdminDashboard';
+import { Navbar } from 'react-bootstrap';
+import styled from 'styled-components'; // ✅ THIS IS THE MISSING IMPORT
 
 const StyledNavbar = styled(Navbar)`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -35,16 +34,14 @@ const LogoutButton = styled.button`
   }
 `;
 
-function App() {
+const App = () => {
   const [activeTab, setActiveTab] = useState('admin');
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
     const token = localStorage.getItem('accessToken');
     if (token) {
-      // In a real app, you'd validate the token here
       setIsAuthenticated(true);
       setUser({
         firstName: 'Admin',
@@ -78,55 +75,14 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen">
-      <StyledNavbar expand="lg" variant="dark">
-        <Container fluid>
-          <Navbar.Brand href="#home">
-            <FiShield style={{ marginRight: '8px' }} />
-            Admin Dashboard
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              {(user?.role === 'Admin' || user?.role === 'Manager') && (
-                <Nav.Link 
-                  active={activeTab === 'admin'} 
-                  onClick={() => setActiveTab('admin')}
-                >
-                  <NavIcon><FiUsers /></NavIcon>
-                  User Management
-                </Nav.Link>
-              )}
-              <Nav.Link 
-                active={activeTab === 'profile'} 
-                onClick={() => setActiveTab('profile')}
-              >
-                <NavIcon><FiUser /></NavIcon>
-                Profile
-              </Nav.Link>
-            </Nav>
-            <Nav>
-              <Nav.Link>
-                <NavIcon><FiSettings /></NavIcon>
-                Settings
-              </Nav.Link>
-              <Nav.Item>
-                <LogoutButton onClick={handleLogout}>
-                  <FiLogOut />
-                  Logout
-                </LogoutButton>
-              </Nav.Item>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </StyledNavbar>
-
-      <Container fluid className="py-4">
-        {activeTab === 'admin' && (user?.role === 'Admin' || user?.role === 'Manager') && <AdminDashboard />}
-        {activeTab === 'profile' && <UserProfile />}
-      </Container>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login onLogin={() => window.location.href = '/dashboard'} />} />
+        <Route path="/dashboard" element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/login" replace />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
