@@ -49,68 +49,89 @@ function Login({ onLogin }) {
     <LoginContainer>
       <Container>
         <Row className="justify-content-center">
-          <Col>
+          <Col md={6} lg={5} xl={4}>
             <StyledCard>
               <LogoSection>
-                <LogoIcon><FiShield /></LogoIcon>
-                <h3 style={{ color: 'var(--heading-color)' }}>Admin Dashboard</h3>
-                <p style={{ color: 'var(--text-secondary)' }}>Sign in to manage your system</p>
+                <LogoIcon>
+                  <FiShield />
+                </LogoIcon>
+                <BrandTitle>Admin Dashboard</BrandTitle>
+                <BrandSubtitle>Secure access to your management portal</BrandSubtitle>
               </LogoSection>
 
-              <Card.Body style={{ padding: '40px' }}>
+              <CardBody>
                 {alert.show && (
-                  <Alert
+                  <StyledAlert
                     variant={alert.type === 'error' ? 'danger' : 'success'}
                     dismissible
                     onClose={() => setAlert({ show: false, type: '', message: '' })}
                   >
                     {alert.message}
-                  </Alert>
+                  </StyledAlert>
                 )}
 
                 <DemoCredentials>
-                  <strong>Demo Credentials:</strong><br />
-                  Email: admin@example.com<br />
-                  Password: admin123<br />
-                  <Button variant="link" size="sm" onClick={fillDemoCredentials}>
-                    Click to fill automatically
-                  </Button>
+                  <DemoTitle>Demo Access</DemoTitle>
+                  <DemoInfo>
+                    <div>Email: admin@example.com</div>
+                    <div>Password: admin123</div>
+                  </DemoInfo>
+                  <AutoFillButton variant="link" size="sm" onClick={fillDemoCredentials}>
+                    Auto-fill credentials
+                  </AutoFillButton>
                 </DemoCredentials>
 
-                <Form onSubmit={handleSubmit}>
+                <LoginForm onSubmit={handleSubmit}>
                   <InputGroup>
-                    <InputIcon><FiMail /></InputIcon>
-                    <StyledInput
-                      type="email"
-                      name="email"
-                      placeholder="Enter your email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
+                    <InputLabel>Email Address</InputLabel>
+                    <InputWrapper>
+                      <InputIcon><FiMail /></InputIcon>
+                      <StyledInput
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                    </InputWrapper>
                   </InputGroup>
 
                   <InputGroup>
-                    <InputIcon><FiLock /></InputIcon>
-                    <StyledInput
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      placeholder="Enter your password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      hasToggle
-                      required
-                    />
-                    <PasswordToggle type="button" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <FiEyeOff /> : <FiEye />}
-                    </PasswordToggle>
+                    <InputLabel>Password</InputLabel>
+                    <InputWrapper>
+                      <InputIcon><FiLock /></InputIcon>
+                      <StyledInput
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        hasToggle
+                        required
+                      />
+                      <PasswordToggle
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                      </PasswordToggle>
+                    </InputWrapper>
                   </InputGroup>
 
                   <LoginButton type="submit" disabled={loading}>
-                    {loading ? (<><Spinner animation="border" size="sm" /> Signing in...</>) : 'Sign In'}
+                    {loading ? (
+                      <LoadingContent>
+                        <Spinner animation="border" size="sm" />
+                        <span>Authenticating...</span>
+                      </LoadingContent>
+                    ) : (
+                      'Sign In'
+                    )}
                   </LoginButton>
-                </Form>
-              </Card.Body>
+                </LoginForm>
+              </CardBody>
             </StyledCard>
           </Col>
         </Row>
@@ -120,135 +141,270 @@ function Login({ onLogin }) {
 }
 
 export default Login;
+
+// Styled Components
 const LoginContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, var(--background-dark) 0%, #0a0f0a 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 `;
 
 const StyledCard = styled(Card)`
-  background-color: var(--card-background);
+  background: var(--card-background);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  max-width: 450px;
+  box-shadow: var(--box-shadow);
+  backdrop-filter: blur(15px);
+  overflow: hidden;
   width: 100%;
+  max-width: 440px;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--box-shadow-hover);
+  }
 `;
 
 const LogoSection = styled.div`
   text-align: center;
-  padding: 40px 0 20px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 3rem 2rem 2rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #000;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+  }
 `;
 
 const LogoIcon = styled.div`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
-  font-size: 32px;
+  margin: 0 auto 1.5rem;
+  font-size: 28px;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+`;
+
+const BrandTitle = styled.h2`
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.025em;
   color: #000;
 `;
 
+const BrandSubtitle = styled.p`
+  font-size: 0.925rem;
+  opacity: 0.8;
+  margin: 0;
+  font-weight: 400;
+  color: #000;
+`;
+
+const CardBody = styled(Card.Body)`
+  padding: 2.5rem;
+  background: var(--card-background);
+`;
+
+const StyledAlert = styled(Alert)`
+  border-radius: 12px;
+  border: none;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  
+  &.alert-success {
+    background-color: rgba(46, 213, 115, 0.15);
+    color: var(--success-color);
+    border: 1px solid rgba(46, 213, 115, 0.3);
+  }
+  
+  &.alert-danger {
+    background-color: rgba(255, 71, 87, 0.15);
+    color: var(--error-color);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+  }
+`;
+
+const DemoCredentials = styled.div`
+  background: rgba(0, 230, 118, 0.08);
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+`;
+
+const DemoTitle = styled.div`
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+`;
+
+const DemoInfo = styled.div`
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', monospace;
+`;
+
+const AutoFillButton = styled(Button)`
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--primary) !important;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+    color: var(--primary-dark) !important;
+  }
+`;
+
+const LoginForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
 const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const InputLabel = styled.label`
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0;
+`;
+
+const InputWrapper = styled.div`
   position: relative;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 `;
 
 const InputIcon = styled.div`
   position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
+  left: 1rem;
+  color: #9ca3af;
   z-index: 2;
+  font-size: 1.1rem;
 `;
 
-// ✅ Fixed: `hasToggle` prop removed before reaching DOM
 const StyledInput = styled(({ hasToggle, ...props }) => (
   <Form.Control {...props} />
 ))`
-  padding-left: 48px;
-  padding-right: ${props => props.hasToggle ? '48px' : '16px'};
-  height: 50px;
-  background-color: var(--card-background);
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
-  color: var(--text-light);
-  font-size: 16px;
-  transition: all 0.3s ease;
+  padding-left: 2.75rem;
+  padding-right: ${props => props.hasToggle ? '2.75rem' : '1rem'};
+  height: 48px;
+  background: #ffffff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 0.925rem;
+  transition: all 0.2s ease;
 
   &:focus {
-    background-color: var(--card-background);
-    border-color: var(--primary);
-    box-shadow: 0 0 0 0.2rem rgba(0, 230, 118, 0.25);
-    color: var(--text-light);
+    background: #ffffff;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    color: #374151;
+    outline: none;
   }
 
   &::placeholder {
-    color: var(--text-secondary);
+    color: #9ca3af;
+  }
+
+  &:hover {
+    border-color: #9ca3af;
   }
 `;
 
 const PasswordToggle = styled.button`
   position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 1rem;
   background: none;
   border: none;
-  color: var(--text-secondary);
+  color: #9ca3af;
   cursor: pointer;
   padding: 0;
   z-index: 2;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
 
   &:hover {
-    color: var(--primary);
+    color: #4f46e5;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
 const LoginButton = styled(Button)`
   width: 100%;
-  height: 50px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  height: 48px;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 600;
-  font-size: 16px;
-  color: #000;
-  transition: all 0.3s ease;
+  font-size: 0.925rem;
+  color: white;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  margin-top: 0.5rem;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 230, 118, 0.3);
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 
   &:disabled {
     opacity: 0.7;
+    cursor: not-allowed;
     transform: none;
     box-shadow: none;
   }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+  }
 `;
 
-const DemoCredentials = styled.div`
-  background-color: rgba(0, 230, 118, 0.1);
-  border: 1px solid var(--primary);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: var(--primary);
+const LoadingContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;

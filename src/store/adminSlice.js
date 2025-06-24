@@ -213,7 +213,12 @@ const adminSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.selectedUser = action.payload;
         state.loading = false;
+      }).addCase(logoutUser.fulfilled, (state) => {
+        state.token = null;
+        state.isAuthenticated = false;
+        state.users = [];
       })
+      
       .addMatcher(
         (action) =>
           action.type.startsWith('admin/') &&

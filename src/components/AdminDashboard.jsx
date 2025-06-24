@@ -204,9 +204,10 @@ const StatusBadge = styled(Badge)`
 const StyledTable = styled(Table)`
   &.table-dark {
     background: transparent;
+
     th {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000;
+      color: var(--heading-color);
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -215,8 +216,9 @@ const StyledTable = styled(Table)`
       font-size: 0.95rem;
       text-align: center;
     }
+
     td {
-      background: rgba(20, 26, 21, 0.7);
+      background: var(--card-background);
       color: var(--text-light);
       border-color: var(--border-color);
       padding: 18px 16px;
@@ -225,15 +227,18 @@ const StyledTable = styled(Table)`
       text-align: center;
       font-size: 0.95rem;
     }
+
     tbody tr {
       transition: all 0.4s ease;
+
       &:hover {
-        background: rgba(0, 230, 118, 0.15);
-        transform: scale(1.02);
+        background: rgba(120, 144, 156, 0.1); /* optional hover fallback */
+        transform: scale(1.01);
       }
     }
   }
 `;
+
 
 const StyledModal = styled(Modal)`
   .modal-content {
@@ -390,14 +395,10 @@ function AdminDashboard() {
   };
 
   const handleLogout = async () => {
-    localStorage.removeItem("user");
     await dispatch(logoutUser());
-    navigate('/login', { replace: true });
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function () {
-      navigate('/login', { replace: true });
-    };
+    window.location.href = '/'; // توجيه إجباري
   };
+  
 
   const showAlert = (type, message) => {
     setAlert({ show: true, type, message });
