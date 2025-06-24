@@ -34,7 +34,23 @@ export const loginAdmin = createAsyncThunk(
     }
   }
 );
+export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
+  const token = localStorage.getItem('token');
+  localStorage.clear();
 
+  if (token) {
+    try {
+      await fetch(`${AUTH_URL}/logout`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    } catch (err) {
+      console.warn('Logout error:', err);
+    }
+  }
+
+  return {};
+});
 export const fetchUsers = createAsyncThunk(
   'admin/fetchUsers',
   async ({ role, isActive, page = 1, limit = 10 }, thunkAPI) => {

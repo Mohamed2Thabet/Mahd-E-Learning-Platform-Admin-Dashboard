@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import { Navbar } from 'react-bootstrap';
-import styled from 'styled-components'; // ✅ THIS IS THE MISSING IMPORT
+import styled from 'styled-components';
 
 const StyledNavbar = styled(Navbar)`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -70,16 +70,39 @@ const App = () => {
     setActiveTab('admin');
   };
 
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
-  }
-
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login onLogin={() => window.location.href = '/dashboard'} />} />
-        <Route path="/dashboard" element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/login" replace />} />
-        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} />
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            isAuthenticated ? (
+              <AdminDashboard />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
       </Routes>
     </Router>
   );

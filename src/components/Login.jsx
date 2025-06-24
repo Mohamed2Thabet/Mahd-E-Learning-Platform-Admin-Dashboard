@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginAdmin } from '../store/adminSlice'; // تأكد من المسار
+import { loginAdmin } from '../store/adminSlice';
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiShield } from 'react-icons/fi';
 import styled from 'styled-components';
@@ -11,7 +11,6 @@ function Login({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ show: false, type: '', message: '' });
-  const navigate =useNavigate()
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -63,7 +62,8 @@ function Login({ onLogin }) {
                   <Alert
                     variant={alert.type === 'error' ? 'danger' : 'success'}
                     dismissible
-                    onClose={() => setAlert({ show: false, type: '', message: '' })}>
+                    onClose={() => setAlert({ show: false, type: '', message: '' })}
+                  >
                     {alert.message}
                   </Alert>
                 )}
@@ -106,7 +106,7 @@ function Login({ onLogin }) {
                     </PasswordToggle>
                   </InputGroup>
 
-                  <LoginButton type="submit" disabled={loading} onClick={() => navigate('/dashboard')}>
+                  <LoginButton type="submit" disabled={loading}>
                     {loading ? (<><Spinner animation="border" size="sm" /> Signing in...</>) : 'Sign In'}
                   </LoginButton>
                 </Form>
@@ -120,10 +120,6 @@ function Login({ onLogin }) {
 }
 
 export default Login;
-
-
-
-
 const LoginContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, var(--background-dark) 0%, #0a0f0a 100%);
@@ -176,7 +172,10 @@ const InputIcon = styled.div`
   z-index: 2;
 `;
 
-const StyledInput = styled(Form.Control)`
+// ✅ Fixed: `hasToggle` prop removed before reaching DOM
+const StyledInput = styled(({ hasToggle, ...props }) => (
+  <Form.Control {...props} />
+))`
   padding-left: 48px;
   padding-right: ${props => props.hasToggle ? '48px' : '16px'};
   height: 50px;
@@ -210,7 +209,7 @@ const PasswordToggle = styled.button`
   cursor: pointer;
   padding: 0;
   z-index: 2;
-  
+
   &:hover {
     color: var(--primary);
   }
